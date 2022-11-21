@@ -1,17 +1,13 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
+import Timeline from './lib/Timeline'
 
-ReactDOM.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
-  document.getElementById('root')
-);
-
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();
+export {
+  default as TimelineMarkers
+} from './lib/markers/public/TimelineMarkers'
+export { default as TodayMarker } from './lib/markers/public/TodayMarker'
+export { default as CustomMarker } from './lib/markers/public/CustomMarker'
+export { default as CursorMarker } from './lib/markers/public/CursorMarker'
+export { default as TimelineHeaders } from './lib/headers/TimelineHeaders'
+export {default as SidebarHeader} from './lib/headers/SidebarHeader'
+export {default as CustomHeader} from './lib/headers/CustomHeader'
+export {default as DateHeader} from './lib/headers/DateHeader'
+export default Timeline
