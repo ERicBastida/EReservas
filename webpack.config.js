@@ -1,12 +1,12 @@
 const path = require('path')
 
 const port = process.env.PORT || 4000
-
+const dirname = './main';
 const config = {
-  context: path.join(__dirname, './demo'),
+  context: path.join(__dirname, dirname),
   entry: {
     // vendor: ['react', 'react-dom', 'faker', 'interactjs', 'moment'],
-    demo: [
+    main: [
       `webpack-dev-server/client?http://0.0.0.0:${port}`,
       'webpack/hot/only-dev-server',
       './index.js'
@@ -34,9 +34,9 @@ const config = {
   },
   resolve: {
     extensions: ['.js', '.jsx'],
-    modules: [path.resolve('./demo'), 'node_modules'],
+    modules: [path.resolve(dirname), 'node_modules'],
     alias: {
-      '~': path.join(__dirname, './demo'),
+      '~': path.join(__dirname, dirname),
       'react-calendar-timeline': path.join(__dirname, './src'),
       'react-calendar-timeline-css': path.join(
         __dirname,
@@ -46,7 +46,7 @@ const config = {
   },
   devServer: {
     static: {
-      directory: './demo'
+      directory: dirname
     },
     port
   }
