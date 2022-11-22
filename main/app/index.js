@@ -50,7 +50,6 @@ class App extends Component {
     return (
       <Router>
         <div>
-        
           <div className="demo-demo">
             <Route path="/" exact component={demos[Object.keys(demos)[0]]} />
             {Object.keys(demos).map(key => (

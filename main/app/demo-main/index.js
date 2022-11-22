@@ -1,7 +1,9 @@
 /* eslint-disable no-console */
 import React, { Component } from 'react'
 import moment from 'moment'
-
+import Button from 'react-bootstrap/Button';
+import Modal from 'react-bootstrap/Modal';
+import Form from "react-bootstrap/Form";
 import Timeline, {
   TimelineMarkers,
   TodayMarker,
@@ -31,6 +33,7 @@ var keys = {
 }
 
 export default class App extends Component {
+
   constructor(props) {
     super(props)
 
@@ -47,8 +50,15 @@ export default class App extends Component {
       groups,
       items,
       defaultTimeStart,
-      defaultTimeEnd
+      defaultTimeEnd,
+      show: false
     }
+  }
+
+  closeModal = () => {
+
+    this.setState({ show: false })
+
   }
 
   handleCanvasClick = (groupId, time) => {
@@ -56,6 +66,7 @@ export default class App extends Component {
   }
 
   handleCanvasDoubleClick = (groupId, time) => {
+    this.setState({ show: true, groupIdSelected: groupId, dateSelected: time })
     console.log('Canvas double clicked', groupId, moment(time).format())
   }
 
@@ -89,10 +100,10 @@ export default class App extends Component {
         item =>
           item.id === itemId
             ? Object.assign({}, item, {
-                start: dragTime,
-                end: dragTime + (item.end - item.start),
-                group: group.id
-              })
+              start: dragTime,
+              end: dragTime + (item.end - item.start),
+              group: group.id
+            })
             : item
       )
     })
@@ -108,9 +119,9 @@ export default class App extends Component {
         item =>
           item.id === itemId
             ? Object.assign({}, item, {
-                start: edge === 'left' ? time : item.start,
-                end: edge === 'left' ? item.end : time
-              })
+              start: edge === 'left' ? time : item.start,
+              end: edge === 'left' ? item.end : time
+            })
             : item
       )
     })
@@ -146,61 +157,105 @@ export default class App extends Component {
   }
 
   render() {
-    const { groups, items, defaultTimeStart, defaultTimeEnd } = this.state
-
+    const { groups, items, defaultTimeStart, defaultTimeEnd, show, groupIdSelected, dateSelected } = this.state
     return (
-      <Timeline
-        groups={groups}
-        items={items}
-        keys={keys}
-        sidebarWidth={150}
-        sidebarContent={<div>Above The Left</div>}
-        canMove
-        canResize="right"
-        canSelect
-        itemsSorted
-        itemTouchSendsClick={false}
-        stackItems
-        itemHeightRatio={0.75}
-        defaultTimeStart={defaultTimeStart}
-        defaultTimeEnd={defaultTimeEnd}
-        onCanvasClick={this.handleCanvasClick}
-        onCanvasDoubleClick={this.handleCanvasDoubleClick}
-        onCanvasContextMenu={this.handleCanvasContextMenu}
-        onItemClick={this.handleItemClick}
-        onItemSelect={this.handleItemSelect}
-        onItemContextMenu={this.handleItemContextMenu}
-        onItemMove={this.handleItemMove}
-        onItemResize={this.handleItemResize}
-        onItemDoubleClick={this.handleItemDoubleClick}
-        onTimeChange={this.handleTimeChange}
-        onZoom={this.handleZoom}
-        moveResizeValidator={this.moveResizeValidator}
-        buffer={3}
-      >
-        <TimelineMarkers>
-          <TodayMarker />
-          <CustomMarker
-            date={
-              moment()
-                .startOf('day')
-                .valueOf() +
-              1000 * 60 * 60 * 2
-            }
-          />
-          <CustomMarker
-            date={moment()
-              .add(3, 'day')
-              .valueOf()}
-          >
-            {({ styles }) => {
-              const newStyles = { ...styles, backgroundColor: 'blue' }
-              return <div style={newStyles} />
-            }}
-          </CustomMarker>
-          <CursorMarker />
-        </TimelineMarkers>
-      </Timeline>
+      <div>
+        <Modal
+          show={show}
+          size="lg"
+          aria-labelledby="contained-modal-title-vcenter"
+          centered
+        >
+          <Modal.Header closeButton>
+            <Modal.Title id="contained-modal-title-vcenter">
+              Habitación  {groupIdSelected}
+            </Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <Form>
+              <div style={{
+                display: 'flex',
+                justifyContent: 'space-around',
+                alignItems: 'center'
+              }}>
+                <Form.Group className="mb-3" controlId="formBasicPassword">
+                  <Form.Label>Check-in</Form.Label>
+                  <Form.Control type="date" name='date_of_birth' />
+                </Form.Group>
+                <Form.Group className="mb-3" controlId="formBasicEmail">
+                  <Form.Label>Cantidad de días</Form.Label>
+                  <Form.Control type="number" placeholder="" />
+                  <Form.Text className="text-muted">
+                    Cantidad de días a partir del check-in
+                  </Form.Text>
+                </Form.Group>
+              </div>
+              <Form.Control
+                as="textarea"
+                placeholder="Leave a comment here"
+                style={{ height: '100px' }}
+              />
+
+            </Form>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="success" onClick={this.closeModal} >Reservar</Button>
+            <Button variant="danger" onClick={this.closeModal}  >Cancelar</Button>
+          </Modal.Footer>
+        </Modal>
+        <Timeline
+          groups={groups}
+          items={items}
+          keys={keys}
+          sidebarWidth={150}
+          sidebarContent={<div>Above The Left</div>}
+          canMove
+          canResize="right"
+          canSelect
+          itemsSorted
+          itemTouchSendsClick={false}
+          stackItems
+          itemHeightRatio={0.75}
+          defaultTimeStart={defaultTimeStart}
+          defaultTimeEnd={defaultTimeEnd}
+          onCanvasClick={this.handleCanvasClick}
+          onCanvasDoubleClick={this.handleCanvasDoubleClick}
+          onCanvasContextMenu={this.handleCanvasContextMenu}
+          onItemClick={this.handleItemClick}
+          onItemSelect={this.handleItemSelect}
+          onItemContextMenu={this.handleItemContextMenu}
+          onItemMove={this.handleItemMove}
+          onItemResize={this.handleItemResize}
+          onItemDoubleClick={this.handleItemDoubleClick}
+          onTimeChange={this.handleTimeChange}
+          onZoom={this.handleZoom}
+          moveResizeValidator={this.moveResizeValidator}
+          buffer={3}
+        >
+          <TimelineMarkers>
+            <TodayMarker />
+            <CustomMarker
+              date={
+                moment()
+                  .startOf('day')
+                  .valueOf() +
+                1000 * 60 * 60 * 2
+              }
+            />
+            <CustomMarker
+              date={moment()
+                .add(3, 'day')
+                .valueOf()}
+            >
+              {({ styles }) => {
+                const newStyles = { ...styles, backgroundColor: 'blue' }
+                return <div style={newStyles} />
+              }}
+            </CustomMarker>
+            <CursorMarker />
+          </TimelineMarkers>
+        </Timeline>
+      </div>
     )
   }
 }

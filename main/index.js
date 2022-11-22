@@ -1,6 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import 'react-calendar-timeline-css'
+
 import App from './app'
 
 const render = AppToRender => {
